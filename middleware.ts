@@ -11,34 +11,39 @@ const rolePaths = {
 }
 
 export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl
+  try {
+    const { pathname } = request.nextUrl
 
-  // Allow public paths
-  if (publicPaths.some((path) => pathname.startsWith(path))) {
+    // Allow public paths
+    if (publicPaths.some((path) => pathname.startsWith(path))) {
+      return NextResponse.next()
+    }
+
+    // Check authentication
+    const token = request.cookies.get("auth-token")
+
+    if (!token) {
+      return NextResponse.redirect(new URL("/auth/login", request.url))
+    }
+
+    // Verify token
+    const payload = await verifyToken(token.value)
+
+    if (!payload) {
+      return NextResponse.redirect(new URL("/auth/login", request.url))
+    }
+
+    // Check role-based access
+    const userRolePath = rolePaths[payload.role]
+    if (!pathname.startsWith(userRolePath)) {
+      return NextResponse.redirect(new URL(userRolePath + "/dashboard", request.url))
+    }
+
+    return NextResponse.next()
+  } catch (error) {
+    console.error("Middleware error:", error)
     return NextResponse.next()
   }
-
-  // Check authentication
-  const token = request.cookies.get("auth-token")
-
-  if (!token) {
-    return NextResponse.redirect(new URL("/auth/login", request.url))
-  }
-
-  // Verify token
-  const payload = await verifyToken(token.value)
-
-  if (!payload) {
-    return NextResponse.redirect(new URL("/auth/login", request.url))
-  }
-
-  // Check role-based access
-  const userRolePath = rolePaths[payload.role]
-  if (!pathname.startsWith(userRolePath)) {
-    return NextResponse.redirect(new URL(userRolePath + "/dashboard", request.url))
-  }
-
-  return NextResponse.next()
 }
 
 export const config = {
