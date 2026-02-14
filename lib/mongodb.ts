@@ -1,4 +1,4 @@
-import "server-only"
+﻿import "server-only"
 import { MongoClient, type Db } from "mongodb"
 
 const uri = process.env.MONGODB_URI || ""
@@ -12,7 +12,6 @@ declare global {
 }
 
 export async function getDatabase(): Promise<Db | null> {
-  // Return null if no MongoDB URI is configured
   if (!uri) {
     console.warn("MONGODB_URI not configured")
     return null

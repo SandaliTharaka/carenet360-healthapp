@@ -1,17 +1,12 @@
-/** @type {import('next').NextConfig} */
+﻿/** @type {import('next').NextConfig} */
 const nextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   typescript: {
     ignoreBuildErrors: true,
   },
   images: {
     unoptimized: true,
   },
-  experimental: {
-    serverComponentsExternalPackages: ["mongodb"],
-  },
+  serverExternalPackages: ["mongodb"],
 }
 
 export default nextConfig
