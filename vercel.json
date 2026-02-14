@@ -1,5 +1,4 @@
 {
-  "root": "HealthApp",
   "buildCommand": "pnpm build",
   "installCommand": "pnpm install"
 }
