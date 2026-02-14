@@ -1,8 +1,31 @@
-# Healthcare Management System
+# 🏥 Healthcare Management System (CareNet360)
 
-A comprehensive full-stack healthcare management system built with Next.js, MongoDB Atlas, and custom CSS.
+A comprehensive full-stack healthcare management system built with **Next.js 15**, **React 19**, **MongoDB Atlas**, and **Custom CSS**. Supporting multi-hospital ecosystems with role-based portals for Patients, Doctors, Pharmacists, and Administrators.
 
-## Features
+![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)
+![License](https://img.shields.io/badge/License-MIT-blue)
+![Node](https://img.shields.io/badge/Node-18+-green)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue)
+
+---
+
+## 📋 Table of Contents
+- [Features](#features)
+- [Tech Stack](#technology-stack)
+- [Quick Start](#quick-start)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Running the Project](#running-the-project)
+- [Project Structure](#project-structure)
+- [User Roles](#user-roles--features)
+- [API Endpoints](#api-endpoints)
+- [Database](#database-collections)
+- [Contributing](#contributing)
+- [License](#license)
+
+---
+
+## ✨ Features
 
 ### Multi-Role Authentication
 - **Patient Portal**: Book appointments, view medical records, digital health cards, payment processing
@@ -24,7 +47,335 @@ A comprehensive full-stack healthcare management system built with Next.js, Mong
 - Payment history and transaction tracking
 - Analytics and reporting
 
-## Setup Instructions
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 18+ and npm/pnpm
+- MongoDB Atlas account (free tier available)
+- Stripe account (for payment processing)
+
+### 5-Minute Setup
+```bash
+# 1. Clone the repository
+git clone https://github.com/SandaliTharaka/carenet360-healthapp.git
+cd carenet360-healthapp/HealthApp
+
+# 2. Install dependencies
+pnpm install
+
+# 3. Create .env.local file with your secrets
+cp .env.example .env.local  # or create manually
+
+# 4. Add your environment variables (see Configuration section)
+
+# 5. Run development server
+pnpm dev
+
+# 6. Open browser
+# 🎉 Visit http://localhost:3000
+```
+
+Login with default admin:
+- **Email**: `admin@healthcare.com`
+- **Password**: `Admin@123456`
+
+---
+
+## 🔧 Installation
+
+### Step 1: Clone Repository
+```bash
+git clone https://github.com/SandaliTharaka/carenet360-healthapp.git
+cd carenet360-healthapp/HealthApp
+```
+
+### Step 2: Install Dependencies
+```bash
+pnpm install
+```
+*(Uses pnpm for faster installs. Or use `npm install` for npm)*
+
+### Step 3: Setup MongoDB Atlas
+
+1. **Create Free Account**: https://www.mongodb.com/cloud/atlas
+2. **Create Cluster**:
+   - Click "Build a Database"
+   - Select **FREE** (M0 tier)
+   - Choose region
+   - Click "Create Cluster"
+
+3. **Add Database User**:
+   - Go to "Database Access" 
+   - Click "Add New Database User"
+   - Set username and password
+   - Select "Read and write to any database"
+   - Save credentials
+
+4. **Allow IP Access**:
+   - Go to "Network Access"
+   - Click "Add IP Address"
+   - Select "Allow Access from Anywhere" (for development)
+
+5. **Get Connection String**:
+   - Go to "Database" → Click "Connect" on your cluster
+   - Choose "Connect your application"
+   - Copy the string and replace `<password>` with your DB password
+
+**Example**:
+```
+mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/healthcare?retryWrites=true&w=majority
+```
+
+### Step 4: Setup Stripe (Optional)
+
+1. Create account at https://stripe.com
+2. Get test keys from Dashboard
+3. Add to `.env.local`
+
+---
+
+## ⚙️ Configuration
+
+### Environment Variables
+
+Create `.env.local` file in project root:
+
+```env
+# MongoDB Configuration
+MONGODB_URI=mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/healthcare?retryWrites=true&w=majority
+
+# JWT Secret (min 32 characters)
+JWT_SECRET=0469dd13ae9e78967ebd910fde7ce12166c4893638f97d7096d74e42c48b03be
+
+# App URL
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+# Admin Credentials (for seeding)
+ADMIN_EMAIL=admin@healthcare.com
+ADMIN_PASSWORD=Admin@123456
+ADMIN_NAME=System Administrator
+
+# Stripe Payment Keys (Test Mode)
+STRIPE_SECRET_KEY=sk_test_xxxxxxxxxx
+STRIPE_PUBLISHABLE_KEY=pk_test_xxxxxxxxxx
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_xxxxxxxxxx
+```
+
+⚠️ **Important**: Never commit `.env.local` to Git (already in `.gitignore`)
+
+---
+
+## 🏃 Running the Project
+
+### Development Mode
+```bash
+pnpm dev
+```
+- Opens at `http://localhost:3000`
+- Hot reload enabled
+- Full debugging support
+
+### Production Build
+```bash
+pnpm build
+pnpm start
+```
+
+### Other Commands
+```bash
+pnpm lint        # Run ESLint
+pnpm test        # Run Jest tests
+pnpm seed:admin      # Create default admin user
+pnpm seed:medicines  # Populate medicine database
+```
+
+---
+
+## 📁 Project Structure
+
+```
+HealthApp/
+├── app/                      # Next.js 15 App Router
+│   ├── api/                 # API routes
+│   │   ├── auth/           # Authentication endpoints
+│   │   ├── appointments/   # Appointment management
+│   │   ├── doctors/        # Doctor endpoints
+│   │   ├── medical-records/ # Health records
+│   │   ├── payments/       # Payment processing
+│   │   ├── prescriptions/  # Prescriptions
+│   │   ├── medicines/      # Pharmacy inventory
+│   │   └── hospitals/      # Hospital management
+│   ├── auth/               # Login/Register pages
+│   ├── patient/            # Patient portal
+│   ├── doctor/             # Doctor portal
+│   ├── pharmacist/         # Pharmacist portal
+│   ├── admin/              # Admin dashboard
+│   └── layout.tsx          # Root layout
+├── components/              # Reusable components
+│   └── ui/                 # 40+ UI components (Radix UI)
+├── lib/                     # Core utilities
+│   ├── mongodb.ts          # Database connection
+│   ├── auth.ts             # JWT & authentication
+│   ├── stripe.ts           # Payment processing
+│   └── utils.ts            # Helper functions
+├── hooks/                   # Custom React hooks
+├── public/                  # Static assets
+├── scripts/                 # Database seeding scripts
+└── middleware.ts            # Authentication middleware
+```
+
+---
+
+## 👥 User Roles & Features
+
+### 👨‍⚕️ **Doctor**
+- View daily appointment schedule
+- **Scan patient QR codes** for instant access to:
+  - Complete patient information
+  - Full medical history
+  - Previous prescriptions
+  - Past appointments
+- Add medical records with diagnosis
+- Write prescriptions
+- Manage patient list
+
+### 🏥 **Patient**
+- Dashboard with health overview
+- Book and manage appointments
+- View medical records
+- Digital health card with QR code
+- Access prescriptions
+- Process payments (Stripe)
+- View payment history
+
+### 💊 **Pharmacist**
+- Medicine inventory management
+- View and fulfill prescriptions
+- Stock tracking
+- Payment processing for medicine sales
+- Order management
+
+### 👨‍💼 **Admin**
+- Manage hospitals (multi-hospital support)
+- Register staff members (doctors, pharmacists)
+- User management
+- View system analytics
+- Appointment oversight
+- Platform statistics
+
+---
+
+## 🔌 API Endpoints
+
+### Authentication
+```
+POST   /api/auth/register       # Register new user
+POST   /api/auth/login          # User login
+POST   /api/auth/logout         # User logout
+GET    /api/auth/me             # Get current user
+```
+
+### Appointments
+```
+GET    /api/appointments        # List appointments
+POST   /api/appointments        # Book appointment
+PATCH  /api/appointments/[id]   # Update appointment
+DELETE /api/appointments/[id]   # Cancel appointment
+```
+
+### Medical Records
+```
+GET    /api/medical-records     # List medical records
+POST   /api/medical-records/create  # Add medical record
+```
+
+### Health Card (QR Scanner)
+```
+GET    /api/health-card         # Get patient card
+POST   /api/health-card/scan    # Scan QR code
+PATCH  /api/health-card         # Update card info
+```
+
+### Prescriptions
+```
+GET    /api/prescriptions       # List prescriptions
+POST   /api/prescriptions/create # Create prescription
+```
+
+### Medicines
+```
+GET    /api/medicines           # List medicines
+POST   /api/medicines           # Add medicine
+PATCH  /api/medicines/[id]      # Update medicine
+DELETE /api/medicines/[id]      # Delete medicine
+```
+
+### Payments
+```
+GET    /api/payments            # Payment history
+POST   /api/payments            # Record payment
+POST   /api/payments/process    # Process payment
+```
+
+---
+
+## 💾 Database Collections
+
+| Collection | Purpose |
+|-----------|---------|
+| `users` | User accounts (all roles) |
+| `appointments` | Appointment bookings |
+| `medical_records` | Patient medical history |
+| `prescriptions` | Doctor prescriptions |
+| `medicines` | Pharmacy inventory |
+| `hospitals` | Hospital information |
+| `health_cards` | Digital health cards |
+| `payments` | Payment transactions |
+
+---
+
+## 🔐 Security Features
+
+- ✅ JWT token-based authentication
+- ✅ httpOnly secure cookies
+- ✅ PBKDF2 password hashing with salt
+- ✅ Role-based access control (RBAC)
+- ✅ Protected API routes
+- ✅ Environment variable secrets
+- ✅ Input validation & sanitization
+- ✅ CORS protection
+
+---
+
+## 📦 Technology Stack
+
+| Layer | Technology |
+|-------|-----------|
+| **Frontend** | Next.js 15, React 19, Custom CSS |
+| **Backend** | Next.js API Routes, Server Actions |
+| **Database** | MongoDB Atlas |
+| **Authentication** | JWT + httpOnly Cookies |
+| **State Management** | React Hooks |
+| **UI Components** | Radix UI (40+) |
+| **Styling** | Custom CSS Modules |
+| **QR Codes** | QRCode library |
+| **Payments** | Stripe API |
+| **Validation** | Zod, React Hook Form |
+| **Charts** | Recharts |
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create feature branch: `git checkout -b feature/YourFeature`
+3. Commit changes: `git commit -m 'Add YourFeature'`
+4. Push to branch: `git push origin feature/YourFeature`
+5. Open Pull Request
+
+---
+
+## 📝## Setup Instructions
 
 ### 1. MongoDB Atlas Setup
 1. Create a free account at [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
@@ -45,177 +396,39 @@ JWT_SECRET=your_secret_key_here
 - Register as a new user (select your role: Patient, Doctor, Pharmacist, or Admin)
 - Login and explore the features
 
-## User Roles & Features
+## 📞 Support & Contact
 
-### Patient
-- Dashboard with health overview and statistics
-- Book and manage appointments with doctors
-- View medical records and complete history
-- Access prescriptions and medication details
-- **Digital health card with QR code** for easy identification
-- **Payment processing** for appointments
-- View payment history and receipts
-- Profile management
+- 📧 Issues: Open an issue on GitHub
+- 💬 Discussions: Use GitHub Discussions
+- 🐛 Bug Reports: Create a detailed issue with reproduction steps
 
-### Doctor
-- View daily schedule and appointments
-- **Scan patient QR codes** to instantly access:
-  - Complete patient information
-  - Full medical history
-  - Previous prescriptions
-  - Past appointments
-- **Add medical records** directly after scanning
-- Create medical records with diagnosis and treatment
-- Write prescriptions with dosage and instructions
-- Patient list management
-- Appointment completion tracking
+---
 
-### Pharmacist
-- Medicine inventory management
-- View and fulfill prescriptions
-- Stock tracking and alerts
-- Order management
-- Payment processing for medicines
+## 📄 License
 
-### Admin
-- User management (view, delete users)
-- System analytics and statistics
-- Appointment oversight
-- Platform-wide statistics
-- System health monitoring
+MIT License - Free to use for learning and commercial purposes.
 
-## Technology Stack
+```
+MIT License
 
-- **Frontend**: Next.js 15 App Router, React, Custom CSS (No Tailwind)
-- **Backend**: Next.js API Routes, Server Actions
-- **Database**: MongoDB Atlas (Cloud)
-- **Authentication**: JWT with httpOnly cookies
-- **Security**: PBKDF2 password hashing with salt
-- **QR Codes**: Dynamic QR code generation for health cards
+Copyright (c) 2026 SandaliTharaka
 
-## Database Collections
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction...
+```
 
-- `users` - User accounts (all roles)
-- `appointments` - Appointment bookings with payment status
-- `medical_records` - Patient medical history with doctor notes
-- `prescriptions` - Doctor prescriptions with status
-- `medicines` - Pharmacy inventory
-- `health_cards` - Digital health cards with QR codes
-- `payments` - Payment transactions and history
+---
 
-## Key Features Explained
+## 🙏 Acknowledgments
 
-### QR Code Scanner (Doctor Portal)
-Doctors can scan patient health cards to instantly view:
-- Patient demographics and contact information
-- Blood group and allergies
-- Complete medical history
-- All previous prescriptions
-- Past appointment records
+- Built with [Next.js](https://nextjs.org/)
+- UI Components from [Radix UI](https://www.radix-ui.com/)
+- Database by [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+- Payments powered by [Stripe](https://stripe.com)
 
-After scanning, doctors can immediately add new medical records for the consultation.
+---
 
-### Payment System
-- Multiple payment methods: Credit Card, Debit Card, UPI, Net Banking
-- Secure payment processing simulation
-- Transaction ID generation
-- Payment history tracking
-- Appointment payment linking
-- Receipt generation
+**⭐ If you find this helpful, please consider giving it a star!**
 
-### Digital Health Card
-- Unique card number for each patient
-- QR code containing patient ID and card number
-- Scannable by doctors for instant access
-- Displays blood group, allergies, emergency contacts
-- Portable digital identification
-
-## API Endpoints
-
-### Authentication
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login
-- `POST /api/auth/logout` - User logout
-- `GET /api/auth/me` - Get current user
-
-### Appointments
-- `GET /api/appointments` - List appointments
-- `POST /api/appointments` - Create appointment
-- `PATCH /api/appointments/[id]` - Update appointment
-- `DELETE /api/appointments/[id]` - Delete appointment
-
-### Medical Records
-- `GET /api/medical-records` - List records
-- `POST /api/medical-records/create` - Create record
-
-### Prescriptions
-- `GET /api/prescriptions` - List prescriptions
-- `POST /api/prescriptions/create` - Create prescription
-
-### Health Cards
-- `GET /api/health-card` - Get patient health card
-- `POST /api/health-card/scan` - Scan QR code (Doctor only)
-- `PATCH /api/health-card` - Update health card info
-
-### Payments
-- `GET /api/payments` - List payment history
-- `POST /api/payments` - Create payment record
-- `POST /api/payments/process` - Process payment transaction
-
-### Medicines
-- `GET /api/medicines` - List medicines
-- `POST /api/medicines` - Add medicine
-- `PATCH /api/medicines/[id]` - Update medicine
-- `DELETE /api/medicines/[id]` - Delete medicine
-
-### Admin
-- `GET /api/admin/users` - List all users
-- `DELETE /api/admin/users` - Delete user
-- `GET /api/admin/stats` - System statistics
-- `GET /api/admin/appointments` - All appointments
-
-### Doctors
-- `GET /api/doctors` - List all doctors
-- `GET /api/patients` - List all patients (Doctor only)
-
-## Security Features
-
-- JWT token-based authentication
-- httpOnly cookies for secure token storage
-- Password hashing with PBKDF2 and salt
-- Role-based access control (RBAC)
-- Protected API routes with middleware
-- Session validation on every request
-- Secure payment processing
-
-## Design System
-
-- Professional medical aesthetic
-- Custom CSS modules (No Tailwind CSS)
-- Color palette: Deep plum primary, teal secondary, coral accent
-- Fully responsive design
-- Clean typography with Inter font family
-- Intuitive navigation
-- Accessible UI components
-- Smooth transitions and hover effects
-
-## Getting Started
-
-1. **Add MongoDB URI**: Go to the Vars section in the v0 sidebar and add your `MONGODB_URI`
-2. **Register**: Create an account and select your role
-3. **Explore**: 
-   - As a **Patient**: Book appointments, view your health card
-   - As a **Doctor**: Scan QR codes, manage appointments, add medical records
-   - As a **Pharmacist**: Manage inventory, fulfill prescriptions
-   - As an **Admin**: Monitor system, manage users
-
-## Notes
-
-- The payment system is simulated for demo purposes (95% success rate)
-- QR codes are generated using an external QR code API
-- All data is stored securely in MongoDB Atlas
-- The system is production-ready with proper error handling
-
-## License
-
-MIT License - feel free to use this project for learning or commercial purposes.
+For detailed setup guide, see [SETUP.md](SETUP.md)
