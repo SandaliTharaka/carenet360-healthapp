@@ -1,3 +1,4 @@
+import "server-only"
 import { MongoClient, type Db } from "mongodb"
 
 const uri = process.env.MONGODB_URI || ""
@@ -38,5 +39,3 @@ export async function getDatabase(): Promise<Db | null> {
     return null
   }
 }
-
-export default clientPromise
