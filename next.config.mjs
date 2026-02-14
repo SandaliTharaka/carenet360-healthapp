@@ -7,6 +7,6 @@ const nextConfig = {
     unoptimized: true,
   },
   serverExternalPackages: ["mongodb"],
-}
+};
 
-export default nextConfig
+export default nextConfig;
