@@ -8,10 +8,11 @@ export interface UserPayload {
   email: string
   role: "patient" | "doctor" | "admin" | "pharmacist"
   name: string
+  [key: string]: unknown
 }
 
 export async function createToken(payload: UserPayload): Promise<string> {
-  return await new SignJWT(payload)
+  return await new SignJWT({ ...payload } as any)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime("7d")
@@ -21,7 +22,7 @@ export async function createToken(payload: UserPayload): Promise<string> {
 export async function verifyToken(token: string): Promise<UserPayload | null> {
   try {
     const verified = await jwtVerify(token, secret)
-    return verified.payload as UserPayload
+    return verified.payload as unknown as UserPayload
   } catch (error) {
     return null
   }
