@@ -14,7 +14,7 @@ export async function getDatabase(): Promise<Db | null> {
   // Return null if no MongoDB URI is configured
   if (!uri) {
     console.warn("MONGODB_URI not configured")
-    return null as any
+    return null
   }
 
   try {
@@ -35,11 +35,8 @@ export async function getDatabase(): Promise<Db | null> {
     return connectedClient.db("healthcare_system")
   } catch (error) {
     console.error("MongoDB connection error:", error)
-    return null as any
+    return null
   }
-}
-
-export default clientPromise
 }
 
 export default clientPromise
